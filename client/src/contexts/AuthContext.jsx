@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 const AuthContext = createContext();
 
@@ -7,29 +14,35 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  // Hardcoded mock user to completely bypass Firebase Auth errors
-  const [currentUser, setCurrentUser] = useState({ 
-    uid: 'dev-123', 
-    email: 'anoop@rooted.com', 
-    displayName: 'Anoop' 
-  });
-  
-  // No loading required since we aren't waiting for Firebase
-  const [loading, setLoading] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock functions completely bypassing Firebase SDK
   const login = async (email, password) => {
-    return true; 
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const signup = async (email, password) => {
-    return true;
+    return createUserWithEmailAndPassword(auth, email, password);
   };
+
+  const logout = async () => {
+    return signOut(auth);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const value = {
     currentUser,
     login,
-    signup
+    signup,
+    logout,
   };
 
   return (

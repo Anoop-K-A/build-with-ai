@@ -3,6 +3,31 @@ import { useNavigate } from "react-router-dom";
 import { Leaf } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
+function getAuthErrorMessage(code) {
+  switch (code) {
+    case "auth/configuration-not-found":
+      return "Firebase Auth is not configured for this project. Enable Authentication in Firebase Console and turn on Email/Password.";
+    case "auth/operation-not-allowed":
+      return "Email/Password sign-in is disabled. Enable it in Firebase Console > Authentication > Sign-in method.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Invalid email or password.";
+    case "auth/email-already-in-use":
+      return "This email is already registered. Please log in.";
+    case "auth/weak-password":
+      return "Password should be at least 6 characters.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please wait and try again.";
+    case "auth/network-request-failed":
+      return "Network error. Check your internet connection and try again.";
+    default:
+      return "Authentication failed. Please try again.";
+  }
+}
+
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -10,8 +35,7 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
-  // Use our mock context functions instead of Firebase Native
+
   const { login, signup } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -28,7 +52,8 @@ export default function AuthPage() {
         navigate("/collection");
       }
     } catch (err) {
-      setError("An unexpected error occurred during mock auth.");
+      const message = getAuthErrorMessage(err?.code);
+      setError(err?.code ? `${message} (${err.code})` : message);
     } finally {
       setLoading(false);
     }
@@ -45,7 +70,9 @@ export default function AuthPage() {
             {isLogin ? "Welcome back" : "Create an account"}
           </h2>
           <p className="text-sm text-gray-500 mt-2">
-            {isLogin ? "Enter your details to sign in" : "Start your plant journey today"}
+            {isLogin
+              ? "Enter your details to sign in"
+              : "Start your plant journey today"}
           </p>
         </div>
 
@@ -57,7 +84,9 @@ export default function AuthPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               type="email"
               required
@@ -68,7 +97,9 @@ export default function AuthPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               type="password"
               required

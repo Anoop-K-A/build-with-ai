@@ -1,12 +1,11 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { Flower2, ScanLine, Settings } from 'lucide-react';
+import React from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import { Flower2, Newspaper } from "lucide-react";
 
 export default function MainLayout() {
   const navItems = [
-    { name: 'My Garden', path: '/collection', icon: Flower2 },
-    { name: 'AI Scanner', path: '/dashboard/p1', icon: ScanLine }, // Hardcoded for demo
-    { name: 'Settings', path: '/settings', icon: Settings },
+    { name: "My Garden", path: "/collection", icon: Flower2 },
+    { name: "News", path: "/news", icon: Newspaper },
   ];
 
   return (
@@ -14,10 +13,12 @@ export default function MainLayout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-72 glass-nav fixed h-full border-r border-white/40 z-50">
         <div className="p-10 flex items-center gap-4">
-           <div className="bg-forest p-3 rounded-2xl shadow-lg shadow-forest/20">
-             <Flower2 className="w-8 h-8 text-sage" />
-           </div>
-           <h1 className="text-3xl font-extrabold text-forest tracking-tighter">Rooted</h1>
+          <div className="bg-forest p-3 rounded-2xl shadow-lg shadow-forest/20">
+            <Flower2 className="w-8 h-8 text-sage" />
+          </div>
+          <h1 className="text-3xl font-extrabold text-forest tracking-tighter">
+            Rooted
+          </h1>
         </div>
         <nav className="flex-1 px-6 space-y-3 mt-4">
           {navItems.map((item) => {
@@ -28,9 +29,9 @@ export default function MainLayout() {
                 to={item.path}
                 className={({ isActive }) =>
                   `flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all duration-300 ${
-                    isActive 
-                      ? 'bg-forest text-cream shadow-xl shadow-forest/10 scale-[1.02]' 
-                      : 'text-forest/60 hover:bg-sage/20 hover:text-forest hover:scale-[1.02]'
+                    isActive
+                      ? "bg-forest text-cream shadow-xl shadow-forest/10 scale-[1.02]"
+                      : "text-forest/60 hover:bg-sage/20 hover:text-forest hover:scale-[1.02]"
                   }`
                 }
               >
@@ -57,16 +58,22 @@ export default function MainLayout() {
               to={item.path}
               className={({ isActive }) =>
                 `flex flex-col items-center gap-1.5 transition-all duration-300 ${
-                  isActive ? 'text-forest scale-110' : 'text-forest/40 hover:text-forest'
+                  isActive
+                    ? "text-forest scale-110"
+                    : "text-forest/40 hover:text-forest"
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <div className={`p-2.5 rounded-2xl ${isActive ? 'bg-sage/20' : ''}`}>
+                  <div
+                    className={`p-2.5 rounded-2xl ${isActive ? "bg-sage/20" : ""}`}
+                  >
                     <Icon className="w-6 h-6" />
                   </div>
-                  <span className="text-[11px] font-extrabold tracking-wide">{item.name}</span>
+                  <span className="text-[11px] font-extrabold tracking-wide">
+                    {item.name}
+                  </span>
                 </>
               )}
             </NavLink>
